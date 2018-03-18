@@ -1,6 +1,9 @@
 class CustomersController < ApplicationController
+# 下記の1行追加
+  before_action :set_customer, only: [:show, :edit, :update, :destroy] #追加
+
   def index
-    @customers = Customer.all
+    @customers = Customer.page(params[:page])
   end
 
   def new
@@ -17,12 +20,10 @@ class CustomersController < ApplicationController
   end
 
   def edit
-    @customer = Customer.find(params[:id])
   end
 
   def update
-
-    if  @customer.update(customer_params)
+    if @customer.update(customer_params)
       redirect_to @customer
     else
       render :edit
@@ -30,16 +31,11 @@ class CustomersController < ApplicationController
   end
 
   def show
-    @customer = Customer.find(params[:id])
-
-
   end
 
   def destroy
-    @customer = Customer.find(params[:id])
     @customer.destroy
-   redirect_to customers_path
-
+    redirect_to customers_path
   end
 
   private
@@ -48,9 +44,13 @@ class CustomersController < ApplicationController
     params.require(:customer).permit(
       :family_name,
       :given_name,
-      :email
-    )
+      :email,
+      :company_id
+      )
   end
 
-
+# ↓追加
+  def set_customer
+    @customer = Customer.find(params[:id])
+  end
 end
