@@ -2,6 +2,7 @@ class Customer < ApplicationRecord
   belongs_to :company
 # 下記の1行を追加
   belongs_to :post
+  has_many :comments
 
 
     validates :family_name, presence: true, length: { maximum: 20 }
